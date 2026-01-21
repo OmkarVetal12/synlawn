@@ -1,0 +1,173 @@
+.syn-card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+/* Header */
+.syn-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+}
+
+.syn-header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.syn-logo {
+    height: 70px;
+    width: auto;
+}
+
+.syn-title {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #000000;
+    margin: 0;
+}
+
+.syn-subtitle {
+    color: #555;
+    font-size: 0.9rem;
+    margin: 0.25rem 0 0 5.3rem;
+}
+
+/* Family Header */
+.syn-family-header {
+    color: #0b6623; /* SYNLawn green */
+    font-weight: 600;
+    border-bottom: 2px solid #0b6623;
+    padding-bottom: 4px;
+}
+
+/* Table Styling */
+.syn-table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 0.9rem;
+}
+
+.syn-table-header {
+    background-color: #0b6623;
+    color: white;
+}
+
+.syn-table th,
+.syn-table td {
+    padding: 0.6rem 0.75rem;
+}
+
+.syn-table tbody tr:nth-child(even) {
+    background-color: #f8f8f8;
+}
+
+/* Grand Total Section */
+.syn-total-table {
+    border-top: 3px solid #0b6623;
+    margin-top: 1rem;
+}
+
+.syn-total-row {
+    background-color: #f4f4f4;
+}
+
+.syn-total-amount {
+    color: #0b6623;
+    font-weight: 700;
+}
+
+.syn-button {
+    background-color: #0b6623;
+    border-color: #0b6623;
+    color: white;
+    margin-right: 0.5rem;
+    border-radius: 0.4rem;
+}
+
+.syn-button:hover {
+    background-color: #09571d;
+    border-color: #09571d;
+}
+.syn-button {
+    --slds-c-button-brand-color-background: #0b6623;
+    --slds-c-button-brand-color-border: #0b6623;
+    --slds-c-button-brand-color-text: #ffffff;
+    --slds-c-button-brand-color-background-hover: #09571d;
+    --slds-c-button-brand-color-border-hover: #09571d;
+    --slds-c-button-brand-color-background-active: #074c19;
+    --slds-c-button-brand-color-border-active: #074c19;
+}
+.syn-table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.syn-table th, 
+.syn-table td {
+    text-align: center;
+}
+
+.syn-table th:first-child,
+.syn-table td:first-child {
+    text-align: left;
+}
+
+.syn-footer {
+    border-top: 2px solid #eee;
+    padding-top: 1rem;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.syn-footer label {
+    white-space: nowrap;
+}
+
+.syn-link {
+    color: #0b6623;
+    text-decoration: underline;
+    font-weight: 500;
+}
+
+.syn-link:hover {
+    color: #09571d;
+    text-decoration: none;
+}
+.syn-help-image {
+    background: #f9f9f9;
+    padding: 0.75rem;
+    border-radius: 8px;
+}
+.quote-help-modal {
+    width: 90vw !important;
+    max-width: 100vw !important;
+    height: 95vh;
+}
+.syn-help-text {
+    color:  #0176d3; 
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.syn-help-text p {
+    margin: 0;
+}
+.syn-help-text {
+    color: #0176d3; /* Salesforce blue */
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.syn-logo {
+    height: 40px;
+}
+
+.syn-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+}

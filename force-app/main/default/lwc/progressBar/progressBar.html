@@ -1,0 +1,15 @@
+<template>
+    <lightning-card title="Project Progress">
+        <div class="slds-p-around_medium">
+            <template if:true={percentage}>
+                <lightning-progress-bar value={percentage}></lightning-progress-bar>
+                <p class="slds-m-top_small slds-text-align_center">
+                    {percentage}% Completed
+                </p>
+            </template>
+            <template if:false={percentage}>
+                <p class="slds-text-align_center">No progress data available</p>
+            </template>
+        </div>
+    </lightning-card>
+</template>

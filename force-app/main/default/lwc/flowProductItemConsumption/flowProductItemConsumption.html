@@ -1,0 +1,27 @@
+<template>
+    <lightning-card title="Product Items">
+        <div class="slds-p-around_medium">
+            <template if:true={columns}>
+                <lightning-datatable
+                    key-field="Id"
+                    data={productItems}
+                    columns={columns}
+                    draft-values={draftValues}
+                    onsave={handleSave}
+                    hide-checkbox-column="false"
+                ></lightning-datatable>
+            </template>
+            <template if:false={columns}>
+                <p>No product items to display.</p>
+            </template>
+        </div>
+
+        <div class="slds-p-around_medium slds-align_absolute-center">
+            <lightning-button
+                label="Confirm"
+                variant="brand"
+                onclick={handleConfirm}
+            ></lightning-button>
+        </div>
+    </lightning-card>
+</template>

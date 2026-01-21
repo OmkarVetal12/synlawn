@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+	<masterLabel>Quote Home</masterLabel>
+	<apiVersion>63.0</apiVersion>
+	<isExposed>true</isExposed>
+	<targets>
+		<target>lightningCommunity__Page</target>
+		<target>lightningCommunity__Default</target>
+		<!-- Also expose for Lightning App Builder if you want to place it on Lightning pages -->
+		<target>lightning__RecordPage</target>
+		<target>lightning__AppPage</target>
+		<target>lightning__HomePage</target>
+	</targets>		
+</LightningComponentBundle>

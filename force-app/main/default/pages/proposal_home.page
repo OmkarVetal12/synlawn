@@ -1,0 +1,19 @@
+<apex:page standardStylesheets="true" sidebar="false" applyBodyTag="false" showHeader="false">
+    <br/>
+    <!--
+    {!recordid}
+    -->
+
+    <apex:includeLightning /> 
+    <div id="lwcContainer"></div>
+  <script>
+        var quoteNumber= "{!$CurrentPage.parameters.quoteNumber}";
+        $Lightning.use("c:forceSiteQuoteWrapper", function() {
+            $Lightning.createComponent("c:quoteHome", { quoteNumber: quoteNumber}, "lwcContainer");
+        });
+       
+    </script>
+
+
+
+</apex:page>

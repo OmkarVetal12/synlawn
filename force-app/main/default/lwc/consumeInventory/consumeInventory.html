@@ -1,0 +1,42 @@
+<template>
+    <lightning-card title="Consume Inventory">
+
+        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Location</th>
+                    <th>Quantity On Hold</th>
+                    <th>Quantity To Consume</th>
+                </tr>
+            </thead>
+            <tbody>
+                <template for:each={inventoryItems} for:item="item">
+                    <tr key={item.productItemId}>
+                        <td>{item.productName}</td>
+                        <td>{item.locationName}</td>
+                        <td>{item.quantityOnHold}</td>
+                        <td>
+                            <lightning-input
+                                type="number"
+                                min="0"
+                                max={item.quantityOnHold}
+                                data-id={item.productItemId}
+                                onchange={handleQuantityChange}>
+                            </lightning-input>
+                        </td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+
+        <div class="slds-p-around_medium slds-text-align_right">
+            <lightning-button
+                variant="brand"
+                label="Confirm"
+                onclick={handleConfirm}>
+            </lightning-button>
+        </div>
+
+    </lightning-card>
+</template>

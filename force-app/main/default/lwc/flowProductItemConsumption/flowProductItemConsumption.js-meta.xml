@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>61.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Flow Product Item Consumption</masterLabel>
+    <description>LWC for capturing product consumption from product items</description>
+    <targets>
+        <target>lightning__FlowScreen</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__FlowScreen">
+            <property name="productItemsJson" type="String" label="Product Items JSON" role="inputOnly" />
+            <property name="displayFields" type="String" label="Display Fields (comma-separated)" role="inputOnly" />
+            <property name="workOrderId" type="String" label="Work Order Id" role="inputOnly" />
+            <property name="productConsumedListJson" type="String" label="Product Consumed JSON" role="outputOnly" />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

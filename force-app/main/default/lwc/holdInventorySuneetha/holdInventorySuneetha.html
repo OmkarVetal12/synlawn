@@ -1,0 +1,38 @@
+<template>
+    <lightning-card title="Hold Inventory">
+        <!-- <lightning-button label="Load Products" onclick={loadProducts}></lightning-button> -->
+        <div class="slds-p-around_medium">
+            <div >
+            <h2>{countProductItems}</h2>
+                <lightning-input 
+                    type="search"
+                    variant="standard"              
+                    placeholder="Enter search term" 
+                    onchange={handleSearch} 
+                    name="search"                 
+                    value={searchTerm}
+                    class="slds-size_3-of-3">                    
+                </lightning-input>
+            </div>
+            <template if:true={productItems}>
+                <div class="datatable-wrapper" style="height: 400px;">
+                    <lightning-datatable
+                        key-field="Id"
+                        data={productItems}
+                        columns={columns}
+                        oncellchange={handleCellChange}
+                        errors={errors}
+                        show-row-number-column = "false"
+                        hide-checkbox-column="false"
+                        suppress-bottom-bar="true"
+                    ></lightning-datatable>
+                    <div>
+                        <!--<lightning-button label="Save" variant="brand" onclick={handleSave} class="slds-m-right_small" ></lightning-button>
+                        <lightning-button label="Cancel" variant="neutral" onclick={handleCancel}></lightning-button>-->
+                        <h2>{errorMessage}</h2>
+                    </div>
+                    </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

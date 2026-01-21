@@ -1,0 +1,314 @@
+<template>
+    <!-- Custom Toast -->
+    <template if:true={message}>
+        <section
+            class="slds-notify_container"
+            style="position: fixed; top: 1rem; right: 1rem; z-index: 10000;"
+        >
+            <div
+                class="slds-notify slds-notify_toast"
+                role="status"
+                style={toastStyle}
+            >
+                <span class="slds-assistive-text">{messageVariant}</span>
+
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small">
+                        {message}
+                    </h2>
+                </div>
+
+                <div class="slds-notify__close">
+                    <button
+                        class="slds-button slds-button_icon"
+                        onclick={clearMessage}
+                        title="Close"
+                    >
+                        <lightning-icon
+                            icon-name="utility:close"
+                            size="x-small"
+                            alternative-text="Close"
+                        ></lightning-icon>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <!-- Spinner -->
+    <template if:true={isLoading}>
+        <lightning-spinner alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+
+    <!-- Main Content -->
+    <template if:true={groupedFamilies}>
+        <lightning-card class="syn-card">
+            <div class="slds-p-around_medium">
+       
+         
+                <div class="slds-grid slds-grid_vertical-align-center slds-grid_align-spread">
+
+                            <div class="slds-grid slds-grid_vertical-align-center slds-shrink-none">
+                                <img src={synLogoUrl} alt="SYNLawn Logo" class="syn-logo" />
+                                <h1 class="syn-title slds-m-left_small">SYNLawn Houston</h1>
+                            </div>
+
+                            <div class="slds-grow slds-text-align_center">
+                                <span class="syn-help-text">
+                                    Use <strong>[Save Selected]</strong> after choosing your selection from
+                                    <strong> Recommended</strong> / <strong>Optional</strong> items.
+                                    <br />
+                                    Enter your name, read & agree to the
+                                    <strong> Terms and Conditions</strong> to
+                                    <strong> [Accept]</strong> the proposal.
+                                </span>
+                            </div>
+
+                            <div class="slds-shrink-none">
+                                <lightning-button-icon
+                                    icon-name="utility:help"
+                                    variant="bare"
+                                    alternative-text="Help"
+                                    onclick={toggleHelp}
+                                ></lightning-button-icon>
+                            </div>
+
+                </div>
+      
+                <!-- FAMILY LOOP -->
+                <template for:each={groupedFamilies} for:item="familyGroup">
+                    <div key={familyGroup.family} class="slds-m-bottom_large">
+
+                        <h3 class="slds-text-heading_small slds-m-bottom_small syn-family-header">
+                            {familyGroup.family}
+                        </h3>
+
+                        <!-- SUB-FAMILY LOOP -->
+                        <template for:each={familyGroup.subGroups} for:item="sub">
+                            <div key={sub.groupKey} class="slds-m-left_medium slds-m-bottom_medium">
+
+                               
+                                <template if:true={sub.subFamily}>
+                                    <h4 class="slds-text-title_bold slds-m-bottom_x-small">
+                                        {sub.subFamily}
+                                    </h4>
+                                </template>
+
+                                <table class="slds-table slds-table_bordered slds-table_cell-buffer syn-table">
+                                    <colgroup>
+                                        <col style="width: 30%;" />
+                                        <col style="width: 12%;" />
+                                        <col style="width: 12%;" />
+                                        <col style="width: 15%;" />
+                                        <col style="width: 16%;" />
+                                        <col style="width: 15%;" />
+                                    </colgroup>
+
+                                    <thead>
+                                        <tr class="syn-table-header">
+                                            <th>Product</th>
+                                            <th>Quantity</th>
+                                            <th>Unit Price</th>
+                                            <th>Net Total</th>
+                                            <th>Option</th>
+                                            <th style="text-align:center;">Select</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <template for:each={sub.items} for:item="item">
+                                            <tr key={item.Id}>
+                                                <td>
+                                                    <template if:true={item.Product2.Product_Description_Link__c}>
+                                                        <a
+                                                            href={item.Product2.Product_Description_Link__c}
+                                                            target="_blank"
+                                                            class="syn-link"
+                                                        >
+                                                            {item.Product2.Name}
+                                                        </a>
+                                                    </template>
+                                                    <template if:false={item.Product2.Product_Description_Link__c}>
+                                                        {item.Product2.Name}
+                                                    </template>
+                                                </td>
+
+                                                <td>{item.Quantity}</td>
+                                                <td>
+                                                    <lightning-formatted-number
+                                                        value={item.UnitPrice}
+                                                        format-style="currency">
+                                                    </lightning-formatted-number>
+                                                </td>
+                                                <td>
+                                                     <lightning-formatted-number
+                                                        value={item.Total_Price_With_Tax__c}
+                                                        format-style="currency">
+                                                    </lightning-formatted-number>
+                                                </td>
+                                                <td>{item.Product_Option__c}</td>
+
+                                                <td style="text-align:center;">
+                                                    <template if:true={item.isIncluded}>
+                                                        <lightning-input
+                                                            type="checkbox"
+                                                            checked
+                                                            disabled
+                                                        ></lightning-input>
+                                                    </template>
+
+                                                    <template if:true={item.isSelectable}>
+                                                     <lightning-input
+                                                        type="radio"
+                                                        name={sub.radioName}
+                                                        data-family={familyGroup.family}
+                                                        data-group={sub.groupKey}
+                                                        value={item.Id}
+                                                        checked={item.isChecked}
+                                                        disabled={disableRadioButtons}
+                                                        onchange={handleOptionChange}>
+                                                    </lightning-input>
+                                                    </template>
+                                                </td>
+                                            </tr>
+                                        </template>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+
+                <!-- TOTALS -->
+                <table class="slds-table slds-table_bordered slds-m-top_medium syn-total-table">
+                    <tbody>
+                        <tr class="syn-total-row">
+                            <td colspan="4" class="slds-text-align_right slds-text-title_bold">
+                                Grand Total
+                            </td>
+                           <td class="slds-text-title_bold syn-total-amount">
+                                <lightning-formatted-number
+                                    value={grandTotal}
+                                    format-style="currency">
+                                </lightning-formatted-number>
+                            </td>
+                            <td colspan="6" class="slds-text-align_right slds-text-title_bold">
+                                Deposit Value
+                            </td>
+                           <td class="slds-text-title_bold syn-total-amount">
+                                <lightning-formatted-number
+                                    value={depositValue}
+                                    format-style="currency">
+                                </lightning-formatted-number>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+       
+                <!-- FOOTER -->
+                <div class="syn-footer slds-grid slds-grid_vertical-align-center slds-grid_align-end slds-wrap slds-m-top_large">
+              <!--Todo remove once kavita confirms-->
+                    <div class="slds-m-top_large syn-help-text">
+                    <p>
+                        Click on the link of the product item to know its details.
+                        <br />
+                        This will open in another browser window.
+                    </p>
+                </div>
+                    <!-- Name -->
+                    <div class="slds-m-right_medium slds-grid slds-grid_vertical-align-center">
+                        <label class="slds-m-right_small">
+                            <strong>Your Name:</strong>
+                        </label>
+                        <lightning-input
+                            type="text"
+                            value={submitterName}
+                            onchange={handleNameChange}
+                            placeholder="Enter your name"
+                            style="width: 180px;"
+                        ></lightning-input>
+                    </div>
+
+                    <!-- Terms -->
+                    <div class="slds-m-right_medium slds-grid slds-grid_vertical-align-center">
+                        <lightning-input
+                            type="checkbox"
+                            label="I agree to the"
+                            checked={termsAccepted}
+                            onchange={handleTermsChange}
+                            class="slds-m-right_x-small"
+                        ></lightning-input>
+                        <a href={terms} target="_blank" class="syn-link">
+                            Terms & Conditions
+                        </a>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="slds-grid slds-grid_vertical-align-center">
+                        <lightning-button
+                            label="Accept"
+                            variant="brand"
+                            class="syn-button"
+                            onclick={handleAccept}
+                            disabled={disableAcceptActions}
+                        ></lightning-button>
+
+                        <lightning-button
+                            label="Pay Now"
+                            variant="brand"
+                            class="syn-button"
+                            onclick={handlePayNow}
+                            disabled={disablePayNowActions}
+                        ></lightning-button>
+
+                        <lightning-button
+                            label="Save Selected"
+                            variant="brand"
+                            class="syn-button"
+                            onclick={handleSave}
+                        ></lightning-button>
+                        <!-- might need to add this
+                        <lightning-button-icon
+                            icon-name="utility:help"
+                            alternative-text="Help"
+                            variant="bare"
+                            class="slds-m-left_small"
+                            onclick={toggleHelp}
+                        ></lightning-button-icon>-->
+                    </div>
+                </div>
+
+            </div>
+        </lightning-card>
+    </template>
+    <template if:true={showHelp}>
+        <section class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container quote-help-modal">
+                <header class="slds-modal__header">                 
+                    <button
+                        class="slds-button slds-button_icon slds-modal__close"
+                        onclick={closeHelp}
+                    >
+                        <lightning-icon
+                            icon-name="utility:close"
+                            size="small"
+                        ></lightning-icon>
+                    </button>
+                </header>
+
+                <div class="slds-modal__content slds-p-around_medium">
+                    <img
+                        src={quoteHelpImageUrl}
+                        alt="Quote Help"
+                        style="max-width:100%;width:99%;max-height:80vh;"
+                    />
+                </div>
+            </div>
+        </section>
+
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+</template>
+ <!-- Help Modal -->
+    

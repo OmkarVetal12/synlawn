@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>65.0</apiVersion>
+    <isExposed>true</isExposed>
+    <!--<masterLabel></masterLabel>-->
+    <description> This is test LWC to hold inventory</description>
+    <targets>
+        <target>lightning__FlowScreen</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__FlowScreen">   
+            <property name="recordId" type="String" label="Record ID" description="The ID of the record associated with product items."/>   
+            <property name="selectedQuoteLineItems" type="@salesforce/schema/QuoteLineItem[]" label="Selected Quote Line Items" description="Selected Quote Line Items to be updated." role="inputOnly"/>
+            <property name="ids" type="String[]" label="Record ids of selected Quote Line Items" description="Selected Quote Line Items to be updated." role="inputOnly"/>
+            <property name="ProductItemTransactionsCollection" type="@salesforce/schema/ProductItemTransaction[]" label="Product Items Transactions List" description="Product Item List to be updated."/>
+            <property name="draftValues" type="String" label="Draft values" description="Draft values to be saved during the flow"/>
+        </targetConfig>
+    </targetConfigs> 
+</LightningComponentBundle>
