@@ -73,9 +73,7 @@ closeHelp() {
         }
     }
 
-    // MESSAGE (REPLACEMENT FOR TOAST) 
 
-// 🔹 Perform update
     showToast(title, message, variant = 'info') {
         this.message = message;
         this.messageVariant = variant;
