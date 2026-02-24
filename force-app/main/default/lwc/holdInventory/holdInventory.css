@@ -32,3 +32,13 @@
 .slds-table {
     background: white;
 }
+.wrap-text {
+    white-space: normal !important; 
+    word-break: break-word;        
+    max-width: 70px;              
+    line-height: 1.4;
+}
+
+.slds-table td.wrap-text {
+    white-space: normal;
+}

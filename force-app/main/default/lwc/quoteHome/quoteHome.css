@@ -171,3 +171,8 @@
     font-size: 1.2rem;
     font-weight: 600;
 }
+.child-row td:first-child {
+    padding-left: 2rem;
+    font-style: italic;
+    color: #555;
+}

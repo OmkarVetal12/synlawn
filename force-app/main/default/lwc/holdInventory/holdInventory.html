@@ -1,42 +1,50 @@
 <template>
-    <lightning-card>
 
-        <!-- SCREEN 1 : SELECT PRODUCTS -->
-        <template if:true={isSelectScreen}>
-            <div class="slds-p-around_medium">
-                <h2 class="slds-text-heading_medium">Select Products</h2>
+    <!-- SCREEN 1 : SELECT PRODUCTS -->
+    <template if:true={isSelectScreen}>
+        <div class="slds-p-around_medium slds-size_1-of-1">
+
+            <h2 class="slds-text-heading_medium slds-m-bottom_medium">
+                Select Products
+            </h2>
+
+            <div class="slds-scrollable_x">
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Product Name</th>
+                            <th>Family</th>
+                            <th>Quote Quantity</th>
+                            <th>Held Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={productList} for:item="product">
+                            <tr key={product.id}>
+                                <td>
+                                    <lightning-input
+                                        type="checkbox"
+                                        data-id={product.id}
+                                        onchange={handleProductSelection}>
+                                    </lightning-input>
+                                </td>
+                                <td>{product.name}</td>
+                                <td>{product.family}</td>
+                                <td>{product.quantity}</td>
+                                <td>{product.onHold}</td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
             </div>
 
-            <table class="slds-table slds-table_cell-buffer slds-table_bordered">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Product Name</th>
-                        <th>Family</th>
-                        <th>Quote Quantity</th>
-                        <th>Held Quantity</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <template for:each={productList} for:item="product">
-                        <tr key={product.id}>
-                            <td>
-                                <lightning-input
-                                    type="checkbox"
-                                    data-id={product.id}
-                                    onchange={handleProductSelection}>
-                                </lightning-input>
-                            </td>
-                            <td>{product.name}</td>
-                            <td>{product.family}</td>
-                            <td>{product.quantity}</td>
-                            <td>{product.onHold}</td>
-                        </tr>
-                    </template>
-                </tbody>
-            </table>
+            <!-- NOTE TEXT -->
+            <div class="slds-p-top_small slds-text-color_error slds-text-align_center">
+                <strong>The Turf "Quote Quantity" is in SQFT</strong>
+            </div>
 
-            <div class="slds-p-around_medium slds-text-align_right">
+            <div class="slds-m-top_medium slds-text-align_right">
                 <lightning-button
                     variant="brand"
                     label="Next"
@@ -44,16 +52,20 @@
                     disabled={isNextDisabled}>
                 </lightning-button>
             </div>
-        </template>
 
-        <!-- SCREEN 2 : INVENTORY VALIDATION -->
-        <template if:true={isInventoryScreen}>
-            <div class="slds-p-around_medium">
-                <h2 class="slds-text-heading_medium">Inventory</h2>
-            </div>
+        </div>
+    </template>
+
+    <!-- SCREEN 2 : INVENTORY VALIDATION -->
+    <template if:true={isInventoryScreen}>
+        <div class="slds-p-around_medium slds-size_1-of-1">
+
+            <h2 class="slds-text-heading_medium slds-m-bottom_medium">
+                Inventory
+            </h2>
 
             <!-- Filters -->
-            <div class="slds-grid slds-gutters slds-p-horizontal_medium">
+            <div class="slds-grid slds-gutters slds-m-bottom_medium">
                 <div class="slds-col">
                     <lightning-input
                         label="Filter by Product"
@@ -68,38 +80,72 @@
                 </div>
             </div>
 
-            <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-m-top_medium">
-                <thead>
-                    <tr>
-                        <th>Product</th>
-                        <th>Location</th>
-                        <th>Available</th>
-                        <th>Held Quantity</th>
-                        <th>Hold Quantity</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <template for:each={visibleInventoryData} for:item="row">
-                        <tr key={row.productItemId}>
-                            <td>{row.productName}</td>
-                            <td>{row.locationName}</td>
-                            <td>{row.availableQty}</td>
-                            <td>{row.quantityOnHold}</td>
-                            <td>
-                                <lightning-input
-                                    type="number"
-                                    min="0"
-                                    max={row.availableQty}
-                                    data-id={row.productItemId}
-                                    onchange={handleHoldQuantityChange}>
-                                </lightning-input>
-                            </td>
+            <!-- Table -->
+            <div class="slds-scrollable_x">
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                    <thead>
+                        <tr>
+                            <th data-field="productName" onclick={handleSort}>
+                                Product {sortSymbols.productName}
+                            </th>
+                            <th data-field="locationName" onclick={handleSort}>
+                                Location {sortSymbols.locationName}
+                            </th>
+                            <th>Item Desc</th>
+                            <th data-field="receivedDate" onclick={handleSort}>
+                                Recd Date {sortSymbols.receivedDate}
+                            </th>
+                            <th data-field="serialNumber" onclick={handleSort}>
+                               Roll id. {sortSymbols.serialNumber}
+                            </th>
+                            <th data-field="dyeLot" onclick={handleSort}>
+                                Dye Lot {sortSymbols.dyeLot}
+                            </th>
+                            <th data-field="quality" onclick={handleSort}>
+                                Quality {sortSymbols.quality}
+                            </th>
+                            <th data-field="availableQty" onclick={handleSort}>
+                                Avl Qty {sortSymbols.availableQty}
+                            </th>
+                            <th data-field="quantityOnHold" onclick={handleSort}>
+                                Held Qty {sortSymbols.quantityOnHold}
+                            </th>
+                            <th>Hold Qty</th>
                         </tr>
-                    </template>
-                </tbody>
-            </table>
+                    </thead>
 
-            <div class="slds-p-around_medium slds-text-align_right">
+                    <tbody>
+                        <template for:each={visibleInventoryData} for:item="row">
+                            <tr key={row.productItemId}>
+                                <td>{row.productName}</td>
+                                <td>{row.locationName}</td>
+                                <td class="wrap-text">{row.itemDescription}</td>
+                                <td>{row.receivedDate}</td>
+                                <td>{row.serialNumber}</td>
+                                <td>{row.dyeLot}</td>
+                                <td>{row.quality}</td>
+                                <td>{row.availableQty}</td>
+                                <td>{row.quantityOnHold}</td>
+                                <td>
+                                    <lightning-input
+                                        type="number"
+                                        min="0"
+                                        max={row.availableQty}
+                                        data-id={row.productItemId}
+                                        onchange={handleHoldQuantityChange}>
+                                    </lightning-input>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+               
+            </div>
+            <div class="slds-p-top_small slds-text-color_error slds-text-align_center">
+                  <strong>The Turf quantity you have to hold is in LF</strong>
+            </div>
+            <!-- Footer -->
+            <div class="slds-m-top_medium slds-text-align_right">
                 <lightning-button
                     label="Back"
                     onclick={handleBack}>
@@ -112,7 +158,8 @@
                     onclick={handleConfirm}>
                 </lightning-button>
             </div>
-        </template>
 
-    </lightning-card>
+        </div>
+    </template>
+
 </template>

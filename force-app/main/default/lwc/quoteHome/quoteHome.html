@@ -55,7 +55,7 @@
 
                             <div class="slds-grow slds-text-align_center">
                                 <span class="syn-help-text">
-                                    Use <strong>[Save Selected]</strong> after choosing your selection from
+                                    Choose your selection from  
                                     <strong> Recommended</strong> / <strong>Optional</strong> items.
                                     <br />
                                     Enter your name, read & agree to the
@@ -96,12 +96,13 @@
 
                                 <table class="slds-table slds-table_bordered slds-table_cell-buffer syn-table">
                                     <colgroup>
-                                        <col style="width: 30%;" />
+                                        <col style="width: 20%;" />
+                                        <col style="width: 11%;" />
+                                        <col style="width: 11%;" />
+                                        <col style="width: 13%;" />
+                                        <col style="width: 13%;" />
+                                        <col style="width: 13%;" />
                                         <col style="width: 12%;" />
-                                        <col style="width: 12%;" />
-                                        <col style="width: 15%;" />
-                                        <col style="width: 16%;" />
-                                        <col style="width: 15%;" />
                                     </colgroup>
 
                                     <thead>
@@ -110,67 +111,104 @@
                                             <th>Quantity</th>
                                             <th>Unit Price</th>
                                             <th>Net Total</th>
+                                            <th>Net Total with Tax</th>
                                             <th>Option</th>
                                             <th style="text-align:center;">Select</th>
                                         </tr>
                                     </thead>
 
-                                    <tbody>
-                                        <template for:each={sub.items} for:item="item">
-                                            <tr key={item.Id}>
+                                   <tbody>
+                                        <template for:each={sub.items} for:item="parent">
+                                            <!-- Parent Items -->
+                                            <tr key={parent.Id} class="syn-parent-row">
                                                 <td>
-                                                    <template if:true={item.Product2.Product_Description_Link__c}>
+                                                    <template if:true={parent.Product2.Product_Description_Link__c}>
                                                         <a
-                                                            href={item.Product2.Product_Description_Link__c}
+                                                            href={parent.Product2.Product_Description_Link__c}
                                                             target="_blank"
                                                             class="syn-link"
                                                         >
-                                                            {item.Product2.Name}
+                                                            {parent.Product2.Name}
                                                         </a>
                                                     </template>
-                                                    <template if:false={item.Product2.Product_Description_Link__c}>
-                                                        {item.Product2.Name}
+                                                    <template if:false={parent.Product2.Product_Description_Link__c}>
+                                                        {parent.Product2.Name}
                                                     </template>
                                                 </td>
 
-                                                <td>{item.Quantity}</td>
+                                                <td>{parent.Quantity}</td>
+
                                                 <td>
                                                     <lightning-formatted-number
-                                                        value={item.UnitPrice}
+                                                        value={parent.UnitPrice}
                                                         format-style="currency">
                                                     </lightning-formatted-number>
                                                 </td>
                                                 <td>
-                                                     <lightning-formatted-number
-                                                        value={item.Net_Total}
+                                                    <lightning-formatted-number
+                                                        value={parent.netTotal}
                                                         format-style="currency">
                                                     </lightning-formatted-number>
                                                 </td>
-                                                <td>{item.Product_Option__c}</td>
+                                                <td>
+                                                    <lightning-formatted-number
+                                                        value={parent.netTaxTotal}
+                                                        format-style="currency">
+                                                    </lightning-formatted-number>
+                                                </td>
+
+                                                <td>{parent.Product_Option__c}</td>
 
                                                 <td style="text-align:center;">
-                                                    <template if:true={item.isIncluded}>
-                                                        <lightning-input
-                                                            type="checkbox"
-                                                            checked
-                                                            disabled
-                                                        ></lightning-input>
+                                                    <template if:true={parent.isIncluded}>
+                                                        <lightning-input type="checkbox" checked disabled></lightning-input>
                                                     </template>
 
-                                                    <template if:true={item.isSelectable}>
-                                                     <lightning-input
-                                                        type="radio"
-                                                        name={sub.radioName}
-                                                        data-family={familyGroup.family}
-                                                        data-group={sub.groupKey}
-                                                        value={item.Id}
-                                                        checked={item.isChecked}
-                                                        disabled={disableRadioButtons}
-                                                        onchange={handleOptionChange}>
-                                                    </lightning-input>
+                                                    <template if:true={parent.isSelectable}>
+                                                        <lightning-input
+                                                            type="radio"
+                                                            name={sub.radioName}
+                                                            data-family={familyGroup.family}
+                                                            data-group={sub.groupKey}
+                                                            value={parent.Id}
+                                                            checked={parent.isChecked}
+                                                            disabled={disableRadioButtons}
+                                                            onchange={handleOptionChange}>
+                                                        </lightning-input>
                                                     </template>
                                                 </td>
                                             </tr>
+
+                                            <!-- Child row -->
+                                            <template if:true={parent.subItems}>
+                                                <template for:each={parent.subItems} for:item="child">
+                                                    <tr key={child.Id} class="syn-child-row">
+                                                        <td class="slds-p-left_large">
+                                                            — {child.Product2.Name}
+                                                        </td>
+
+                                                        <td>{child.Quantity}</td>
+
+                                                        <td>
+                                                            <lightning-formatted-number
+                                                                value={child.UnitPrice}
+                                                                format-style="currency">
+                                                            </lightning-formatted-number>
+                                                        </td>
+
+                                                        <td>
+                                                            <lightning-formatted-number
+                                                                value={child.netTaxTotal}
+                                                                format-style="currency">
+                                                            </lightning-formatted-number>
+                                                        </td>
+
+                                                        <td>{child.Product_Option__c}</td>
+
+                                                        <td></td>
+                                                    </tr>
+                                                </template>
+                                            </template>
                                         </template>
                                     </tbody>
                                 </table>
@@ -182,7 +220,26 @@
                 <!-- TOTALS -->
                 <table class="slds-table slds-table_bordered slds-m-top_medium syn-total-table">
                     <tbody>
+                           
                         <tr class="syn-total-row">
+                            <td colspan="1" class="slds-text-align_right slds-text-title_bold">
+                                Net Total
+                            </td>
+                           <td class="slds-text-title_bold syn-total-amount">
+                                <lightning-formatted-number
+                                    value={netTotal}
+                                    format-style="currency">
+                                </lightning-formatted-number>
+                            </td>
+                               <td colspan="2" class="slds-text-align_right slds-text-title_bold">
+                                Sales Tax
+                            </td>
+                           <td class="slds-text-title_bold syn-total-amount">
+                                <lightning-formatted-number
+                                    value={SalesTaxTotal}
+                                    format-style="currency">
+                                </lightning-formatted-number>
+                            </td>
                             <td colspan="4" class="slds-text-align_right slds-text-title_bold">
                                 Grand Total
                             </td>
@@ -261,12 +318,7 @@
                             disabled={disablePayNowActions}
                         ></lightning-button>
 
-                        <lightning-button
-                            label="Save Selected"
-                            variant="brand"
-                            class="syn-button"
-                            onclick={handleSave}
-                        ></lightning-button>
+                    
                         <!-- might need to add this
                         <lightning-button-icon
                             icon-name="utility:help"
@@ -311,4 +363,3 @@
 
 </template>
  <!-- Help Modal -->
-    

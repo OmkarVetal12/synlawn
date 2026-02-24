@@ -4,6 +4,8 @@ import consumeInventory from '@salesforce/apex/WorkOrderInventoryController.cons
 import QUOTE_FIELD from '@salesforce/schema/WorkOrder.Quote__c';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { CloseActionScreenEvent } from 'lightning/actions';
+import FORM_FACTOR from '@salesforce/client/formFactor';
+
 
 export default class ConsumeInventory extends LightningElement {
     @api recordId;
@@ -28,6 +30,10 @@ export default class ConsumeInventory extends LightningElement {
                 })
             );
         }
+    }
+
+    get isMobile() {
+        return FORM_FACTOR === 'Small';
     }
 
     handleQuantityChange(event) {

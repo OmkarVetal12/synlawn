@@ -21,6 +21,9 @@ export default class HoldInventory extends LightningElement {
     productSearchText = '';
     locationSearchText = '';
     wiredQuoteLineItemsResult;
+
+    @track sortField = 'productName';
+    @track sortDirection = 'asc';
     
     @wire(getQuoteLineItems, { quoteId: '$recordId' })
 loadQuoteLineItems(result) {
@@ -81,7 +84,7 @@ loadQuoteLineItems(result) {
             ...row,
             holdQuantity: 0,                     // user input
             quantityOnHold: row.quantityOnHold || 0 // from Apex
-        }));
+        })).filter(row => row.availableQty > 0);
 
         this.visibleInventoryData = [...this.inventoryData];
 
@@ -184,9 +187,67 @@ loadQuoteLineItems(result) {
 
     this.dispatchEvent(new CloseActionScreenEvent());
 }
+    handleSort(event) {
+        const columnField = event.target.dataset.field;
+        if (!columnField) return;
 
+        const isSameColumn = this.sortField === columnField;
+        const newSortDirection =
+            isSameColumn && this.sortDirection === 'asc' ? 'desc' : 'asc';
 
+        this.visibleInventoryData = [...this.visibleInventoryData].sort(
+            (rowA, rowB) => {
+                let firstValue = rowA[columnField] ?? '';
+                let secondValue = rowB[columnField] ?? '';
 
+                if (firstValue instanceof Date) firstValue = new Date(firstValue);
+                if (secondValue instanceof Date) secondValue = new Date(secondValue);
+
+                if (firstValue > secondValue) {
+                    return newSortDirection === 'asc' ? 1 : -1;
+                }
+
+                if (firstValue < secondValue) {
+                    return newSortDirection === 'asc' ? -1 : 1;
+                }
+
+                return 0;
+            }
+        );
+
+        this.sortField = columnField;
+        this.sortDirection = newSortDirection;
+    }
+     get sortSymbols() {
+        const defaultSymbol = '⇅'; 
+
+        return {
+            productName:
+                this.sortField === 'productName' ? this.sortSymbol : defaultSymbol,
+
+            locationName:
+                this.sortField === 'locationName' ? this.sortSymbol : defaultSymbol,
+
+            availableQty:
+                this.sortField === 'availableQty' ? this.sortSymbol : defaultSymbol,
+
+            quantityOnHold:
+                this.sortField === 'quantityOnHold' ? this.sortSymbol : defaultSymbol,
+
+            dyeLot:
+                this.sortField === 'dyeLot' ? this.sortSymbol : defaultSymbol,
+
+            serialNumber:
+                this.sortField === 'serialNumber' ? this.sortSymbol : defaultSymbol,
+
+            receivedDate:
+                this.sortField === 'receivedDate' ? this.sortSymbol : defaultSymbol
+        };
+    }
+
+    get sortSymbol() {
+        return this.sortDirection === 'asc' ? '↑' : '↓';
+    }
        renderedCallback() {
         if (!this.hasRefreshed && this.wiredQuoteLineItemsResult && this.recordId) {
             this.hasRefreshed = true;
